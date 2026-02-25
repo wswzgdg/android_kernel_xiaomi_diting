@@ -693,7 +693,7 @@ static void binder_do_set_priority(struct task_struct *task,
 	bool has_cap_nice;
 	unsigned int policy = desired.sched_policy;
 
-	if (task->policy == policy && task->normal_prio == desired.prio)
+	if (task->policy == policy && task->prio == desired.prio)
 		return;
 
 	has_cap_nice = has_capability_noaudit(task, CAP_SYS_NICE);
@@ -730,7 +730,7 @@ static void binder_do_set_priority(struct task_struct *task,
 			      task->pid, desired.prio,
 			      to_kernel_prio(policy, priority));
 
-	trace_binder_set_priority(task->tgid, task->pid, task->normal_prio,
+	trace_binder_set_priority(task->tgid, task->pid, task->prio,
 				  to_kernel_prio(policy, priority),
 				  desired.prio);
 
@@ -962,17 +962,8 @@ static int binder_inc_node_nilocked(struct binder_node *node, int strong,
 	} else {
 		if (!internal)
 			node->local_weak_refs++;
-		if (!node->has_weak_ref && list_empty(&node->work.entry)) {
-			if (target_list == NULL) {
-				pr_err("invalid inc weak node for %d\n",
-					node->debug_id);
-				return -EINVAL;
-			}
-			/*
-			 * See comment above
-			 */
+		if (!node->has_weak_ref && target_list && list_empty(&node->work.entry))
 			binder_enqueue_work_ilocked(&node->work, target_list);
-		}
 	}
 	return 0;
 }
@@ -3287,7 +3278,7 @@ static void binder_transaction(struct binder_proc *proc,
 	    binder_supported_policy(current->policy)) {
 		/* Inherit supported policies for synchronous transactions */
 		t->priority.sched_policy = current->policy;
-		t->priority.prio = current->normal_prio;
+		t->priority.prio = current->prio;
 	} else {
 		/* Otherwise, fall back to the default priority */
 		t->priority = target_proc->default_priority;
