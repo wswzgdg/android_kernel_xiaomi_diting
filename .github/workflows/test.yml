@@ -108,7 +108,7 @@ jobs:
           cd kernel_workspace
           echo "CONFIG_KSU_MULTI_MANAGER_SUPPORT=y" >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
           echo 'CONFIG_KSU_FULL_NAME_FORMAT="%TAG_NAME%-%COMMIT_SHA%@Xinran"' >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
-          # echo 'CONFIG_LSM="lockdown,yama,loadpin,safesetid,integrity,bbg,selinux,smack,tomoyo,apparmor,bpf"' >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
+          echo 'CONFIG_LSM="lockdown,yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor,bpf,baseband_guard"' >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
           echo "CONFIG_CRYPTO_LZ4=y" >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
           echo "CONFIG_CRYPTO_LZ4HC=y" >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
           echo "CONFIG_CRYPTO_LZ4KD=y" >> ./common/arch/arm64/configs/xiaomi_diting_defconfig
